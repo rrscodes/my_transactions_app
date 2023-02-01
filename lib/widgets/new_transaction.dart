@@ -6,32 +6,40 @@ class NewTransaction extends StatelessWidget {
 
   final titleController = TextEditingController();
   final amountController = TextEditingController();
+
+  void submitData() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.parse(amountController.text);
+
+    if (enteredTitle.isEmpty || enteredAmount.isNegative) {
+      return;
+    }
+
+    addTxn(enteredTitle, enteredAmount);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(
-        vertical: 5,
-        horizontal: 20,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          TextField(
-            decoration: const InputDecoration(labelText: 'Title'),
-            controller: titleController,
-          ),
-          TextField(
-            decoration: const InputDecoration(labelText: 'Amount'),
-            controller: amountController,
-          ),
-          TextButton(
-            onPressed: () => {
-              addTxn(titleController.text, double.parse(amountController.text))
-            },
-            child: const Text('Add Transaction'),
-          )
-        ]),
-      ),
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        TextField(
+          decoration: const InputDecoration(labelText: 'Title'),
+          controller: titleController,
+          keyboardType: TextInputType.text,
+          onSubmitted: (_) => submitData(),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'Amount'),
+          controller: amountController,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          onSubmitted: (_) => submitData(),
+        ),
+        TextButton(
+          onPressed: submitData,
+          child: const Text('Add Transaction'),
+        )
+      ]),
     );
   }
 }
